@@ -549,6 +549,8 @@ def base_cmake_defines(dirs):
     """
     # yapf: disable
     defines = {
+        # Make ld.lld the default linker for clang
+        'CLANG_DEFAULT_LINKER': 'lld',
         # Objective-C Automatic Reference Counting (we don't use Objective-C)
         # https://clang.llvm.org/docs/AutomaticReferenceCounting.html
         'CLANG_ENABLE_ARCMT': 'OFF',
