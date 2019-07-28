@@ -17,7 +17,7 @@ def create_gitignore(folder):
         gitignore.write("*")
 
 
-def fetch_binutils(folder, update=True):
+def fetch_binutils(folder, update=True, shallow=False):
     """
     Clones/updates the binutils repo
     :param folder: Directory to download binutils to
@@ -31,9 +31,10 @@ def fetch_binutils(folder, update=True):
                  binutils_folder.as_posix(), "pull", "--rebase"],
                 check=True)
     else:
+        extra_args = ("--depth", "1") if shallow else ()
         print_header("Downloading binutils")
         subprocess.run([
-            "git", "clone", "git://sourceware.org/git/binutils-gdb.git",
+            "git", "clone", *extra_args, "git://sourceware.org/git/binutils-gdb.git",
             binutils_folder.as_posix()
         ],
                        check=True)

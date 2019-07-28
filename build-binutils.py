@@ -72,6 +72,14 @@ def parse_parameters(root_folder):
                         type=str,
                         default=os.path.join(root_folder.as_posix(),
                                              "install"))
+    parser.add_argument("-s",
+                        "--shallow-clone",
+                        help="""
+                        Only fetch the required objects and omit history when cloning the binutils repo. This
+                        speeds up the initial clone, but may break updating to later revisions and thus
+                        necessitate a re-clone in the future.
+                        """,
+                        action="store_true")
     parser.add_argument("-t",
                         "--targets",
                         help="""
@@ -256,7 +264,7 @@ def main():
     if args.targets is not None:
         targets = args.targets
 
-    utils.fetch_binutils(root_folder)
+    utils.fetch_binutils(root_folder, shallow=args.shallow_clone)
 
     build_targets(build_folder, install_folder, root_folder,
                   create_targets(targets), args.march)
