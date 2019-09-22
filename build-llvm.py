@@ -274,7 +274,7 @@ def versioned_binaries(binary_name):
     """
 
     # There might be clang-6 to clang-10
-    return ['%s-%s' % (binary_name, i) for i in range(10, 5, -1)]
+    return ['%s-%s' % (binary_name, i) for i in range(10, 5, -1)] + [binary_name]
 
 
 def check_cc_ld_variables(root_folder):
@@ -289,7 +289,7 @@ def check_cc_ld_variables(root_folder):
         cc = shutil.which(os.environ['CC'])
     # Otherwise, try to find one
     else:
-        possible_compilers = versioned_binaries("clang") + ['clang', 'gcc']
+        possible_compilers = versioned_binaries("clang") + ['gcc']
         for compiler in possible_compilers:
             cc = shutil.which(compiler)
             if cc is not None:
@@ -336,7 +336,7 @@ def check_cc_ld_variables(root_folder):
         # and we're using clang, try to find the fastest one
         if "clang" in cc:
             possible_linkers = versioned_binaries("lld") + [
-                'lld', 'gold', 'bfd'
+                'gold', 'bfd'
             ]
             for linker in possible_linkers:
                 # We want to find lld wherever the clang we are using is located
