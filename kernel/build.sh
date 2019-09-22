@@ -36,9 +36,13 @@ done
 [[ -z ${TARGETS[*]} ]] && TARGETS=( "arm-linux-gnueabi" "aarch64-linux-gnu" "powerpc-linux-gnu" "powerpc64-linux-gnu" "powerpc64le-linux-gnu" "x86_64-linux-gnu" )
 [[ -z ${CONFIG_TARGET} ]] && CONFIG_TARGET=defconfig
 
+stage=stage2
+if [ ! -d "${TC_BLD}/build/llvm/stage2/bin" ]; then
+    stage=stage1
+fi
 # Add the default install bin folder to PATH for binutils
-# Add the stage 2 bin folder to PATH for the instrumented clang
-for BIN_FOLDER in ${TC_BLD}/install/bin ${BUILD_FOLDER:=${TC_BLD}/build/llvm}/stage2/bin; do
+# Add the PGO instrumented stage bin folder to PATH for the instrumented clang
+for BIN_FOLDER in ${TC_BLD}/install/bin ${BUILD_FOLDER:=${TC_BLD}/build/llvm}/${stage}/bin; do
     export PATH=${BIN_FOLDER}:${PATH}
 done
 
