@@ -1,0 +1,23 @@
+version: v1.0
+name: LiuNian clang CI
+agent:
+  machine:
+    type: e1-standard-8
+    os_image: ubuntu1804
+blocks:
+  - name: default
+    task:
+      jobs:
+        - name: Compile
+          commands:
+             - checkout
+             - cache restore clang-ccache
+             - bash ./.ci/env-setup.sh
+             - bash ./.ci/build.sh
+      secrets:
+        - name: Github
+      prologue:
+        commands:
+           - sudo bash -c 'echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main" >> /etc/apt/sources.list'
+           - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+           - sudo install-package ccache ninja-build texinfo gnupg2 flex bc clang-10 lld-10
