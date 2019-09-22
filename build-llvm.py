@@ -439,6 +439,12 @@ def cleanup(build_folder, incremental):
     :param incremental: Whether the build is incremental or not.
     :return:
     """
+
+    for p in ['stage%s' % i for i in range(1, 3, 1)]:
+        path = build_folder.joinpath(p).joinpath("CMakeCache.txt").as_posix()
+        if os.path.exists(path):
+            shutil.rmtree(build_folder.joinpath(p).joinpath("CMakeFiles"))
+            os.remove(path)
     if not incremental and build_folder.is_dir():
         shutil.rmtree(build_folder.as_posix())
     build_folder.mkdir(parents=True, exist_ok=True)
