@@ -129,8 +129,8 @@ def cleanup(build_folder):
     Cleanup the build directory
     :param build_folder: Build directory
     """
-    if build_folder.is_dir():
-        shutil.rmtree(build_folder.as_posix())
+    """if build_folder.is_dir():
+        shutil.rmtree(build_folder.as_posix())"""
     build_folder.mkdir(parents=True, exist_ok=True)
 
 
