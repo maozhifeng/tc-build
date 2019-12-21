@@ -517,8 +517,6 @@ def base_cmake_defines(dirs):
         # We don't use the plugin system and it will remove unused symbols:
         # https://crbug.com/917404
         'CLANG_PLUGIN_SUPPORT': 'OFF',
-	# Include polyhedral optimization support
-	'LINK_POLLY_INTO_TOOLS': 'ON',
         # For LLVMgold.so, which is used for LTO with ld.gold
         'LLVM_BINUTILS_INCDIR': dirs.root_folder.joinpath(utils.current_binutils(), "include").as_posix(),
         # Don't build bindings; they are for other languages that the kernel does not use
