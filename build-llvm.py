@@ -622,9 +622,7 @@ def cc_ld_cmake_defines(args, dirs, env_vars, stage):
         llvm_tblgen = get_stage1_binary("llvm-tblgen", dirs)
         ranlib = get_stage1_binary("llvm-ranlib", dirs)
 
-    # Use llvm-ar for non-bootstrap stages builds to avoid errors with bfd plugin
-    # bfd plugin: LLVM gold plugin has failed to create LTO module: Unknown attribute kind (60) (Producer: 'LLVM9.0.0svn' Reader: 'LLVM 8.0.0')
-    if ar and not bootstrap_stage(args, stage):
+    if ar:
         defines['CMAKE_AR'] = ar
 
     # The C compiler to use
@@ -643,8 +641,7 @@ def cc_ld_cmake_defines(args, dirs, env_vars, stage):
     if llvm_tblgen:
         defines['LLVM_TABLEGEN'] = llvm_tblgen
 
-    # Use llvm-ranlib for non-bootstrap stages
-    if ranlib and not bootstrap_stage(args, stage):
+    if ranlib:
         defines['CMAKE_RANLIB'] = ranlib
 
     return defines
