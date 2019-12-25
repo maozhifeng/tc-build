@@ -712,7 +712,7 @@ def stage_specific_cmake_defines(args, dirs, stage):
         defines['CMAKE_BUILD_TYPE'] = args.build_type
 
         # We don't care about warnings if we are building a release build
-        if args.build_type == "Release":
+        if args.build_type == "Release" or "MinSizeRel":
             defines['LLVM_ENABLE_WARNINGS'] = 'OFF'
 
         # Build with assertions enabled if requested (will slow down compilation
