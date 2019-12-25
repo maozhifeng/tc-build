@@ -19,6 +19,7 @@ msg "Building LLVM..."
 ./build-llvm.py \
 	--clang-vendor "LiuNian-$(date +%Y%m%d)" \
 	--projects "clang;compiler-rt;lld;polly" \
+	--build-type "MinSizeRel" \
 	--incremental \
 	--build-stage1-only \
 	--install-stage1-only \
