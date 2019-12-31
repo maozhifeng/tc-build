@@ -35,8 +35,5 @@ for bin in $(find install -type f -exec file {} \; | grep 'ELF .* interpreter' |
 	# Remove last character from file output (':')
 	bin="${bin: : -1}"
 
-	if ldd "$bin" | grep -q "not found"; then
-		echo "Setting rpath on $bin"
-		patchelf --set-rpath '$ORIGIN/../lib' "$bin"
-	fi
+	patchelf --set-rpath '$ORIGIN/../lib' "$bin"
 done
