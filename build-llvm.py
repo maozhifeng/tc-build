@@ -421,11 +421,12 @@ def fetch_llvm_binutils(args, dirs, shallow=False):
     else:
         ref = args.branch
     cwd = dirs.llvm_folder.as_posix()
+    cmakeList = dirs.llvm_folder.joinpath("polly").joinpath("CMakeLists.txt").as_posix()
     if dirs.llvm_folder.is_dir():
         if not args.no_update:
             utils.print_header("Updating LLVM")
             subprocess.run(["git", "fetch", "origin"], check=True, cwd=cwd)
-            subprocess.run(["git", "reset", "--hard"], check=True, cwd=cwd)
+            subprocess.run(["git", "checkout", "%s" % cmakeList], check=True, cwd=cwd)
             subprocess.run(["git", "checkout", ref], check=True, cwd=cwd)
             local_ref = None
             try:
@@ -453,8 +454,8 @@ def fetch_llvm_binutils(args, dirs, shallow=False):
         subprocess.run(["git", "checkout", ref], check=True, cwd=cwd)
         
     subprocess.run(
-        ["sed", "-i", "/add_subdirectory(test)/d;/add_subdirectory(docs)/d;/add_subdirectory(tools)/d", "%s"
-        % dirs.llvm_folder.joinpath("polly").joinpath("CMakeLists.txt").as_posix()], check=True, cwd=cwd)
+        ["sed", "-i", "/add_subdirectory(test)/d;/add_subdirectory(docs)/d;/add_subdirectory(tools)/d",
+        "%s" % cmakeList], check=True, cwd=cwd)
 
     # One might wonder why we are downloading binutils in an LLVM build script :)
     # We need it for the LLVMgold plugin, which can be used for LTO with ld.gold,
