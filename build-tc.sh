@@ -27,8 +27,8 @@ export CXX="ccache clang++"
 
 msg "Setting library load paths for portability and"
 msg "Stripping remaining products..."
-IFS=$'\n' read -ra ADDR -d $'\0' <<< "$(find install -type f -exec file {} \;)"
-for f in "${ADDR[@]}"; do
+IFS=$'\n'
+for f in $(find install -type f -exec file {} \;); do
 	# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
 	if [ -n "$(echo $f | grep 'ELF .* interpreter')" ]; then
 		bin=$(echo $f | awk '{print $1}')
@@ -36,7 +36,7 @@ for f in "${ADDR[@]}"; do
 	fi
 
 	# Strip remaining products
-	if [ -n "$(echo $f | grep 'not stripped' | grep -v 'strip')" ]; then
+	if [ -n "$(echo $f | grep 'not stripped' | grep -v 'bin/strip')" ]; then
 		f=$(echo $f | awk '{print $1}')
 		strip "${f: : -1}" 2>/dev/null
 	fi
