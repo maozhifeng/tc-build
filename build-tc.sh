@@ -4,9 +4,6 @@
 # Exit on error
 set -e
 
-export CC=$(which clang)
-export CXX=$(which clang++)
-
 # Function to show an informational message
 function msg() {
     echo -e "\e[1;32m$@\e[0m"
@@ -29,6 +26,8 @@ msg "Building LLVM..."
 
 # Build binutils
 msg "Building binutils..."
+export CC="ccache clang"
+export CXX="ccache clang++"
 ./build-binutils.py \
 	"${binutils_args[@]}"
 
