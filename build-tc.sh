@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Script to build a toolchain specialized for Proton Kernel development
 
 # Exit on error
 set -e
@@ -26,11 +25,19 @@ export CXX="ccache clang++"
 ./build-binutils.py \
 	--targets arm aarch64 x86_64
 
-# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
-msg "Setting library load paths for portability..."
-for bin in $(find install -type f -exec file {} \; | grep 'ELF .* interpreter' | awk '{print $1}'); do
-	# Remove last character from file output (':')
-	bin="${bin: : -1}"
+msg "Setting library load paths for portability and"
+msg "Stripping remaining products..."
+IFS=$'\n' read -ra ADDR -d $'\0' <<< "$(find install -type f -exec file {} \;)"
+for f in "${ADDR[@]}"; do
+	# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
+	if [ -n "$(echo $f | grep 'ELF .* interpreter')" ]; then
+		bin=$(echo $f | awk '{print $1}')
+		patchelf --set-rpath '$ORIGIN/../lib' "${bin: : -1}"
+	fi
 
-	patchelf --set-rpath '$ORIGIN/../lib' "$bin"
+	# Strip remaining products
+	if [ -n "$(echo $f | grep 'not stripped' | grep -v 'strip')" ]; then
+		f=$(echo $f | awk '{print $1}')
+		strip "${f: : -1}" 2>/dev/null
+	fi
 done
