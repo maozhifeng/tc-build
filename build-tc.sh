@@ -29,15 +29,18 @@ msg "Setting library load paths for portability and"
 msg "Stripping remaining products..."
 IFS=$'\n'
 for f in $(find install -type f -exec file {} \;); do
-	# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
-	if [ -n "$(echo $f | grep 'ELF .* interpreter')" ]; then
-		bin=$(echo $f | awk '{print $1}')
-		patchelf --set-rpath '$ORIGIN/../lib' "${bin: : -1}"
-	fi
-
-	# Strip remaining products
-	if [ -n "$(echo $f | grep 'not stripped' | grep -v 'bin/strip')" ]; then
-		f=$(echo $f | awk '{print $1}')
-		strip "${f: : -1}" 2>/dev/null
+	if [ -n "$(echo $f | grep 'ELF .* LSB executable')" ]; then
+		i=$(echo $f | awk '{print $1}')
+		# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
+		patchelf --set-rpath '$ORIGIN/../lib' "${i: : -1}"
+		# Strip remaining products
+		if [ -n "$(echo $f | grep 'not stripped' | grep -v 'bin/strip')" ]; then
+			strip --strip-unneeded "${i: : -1}"
+		fi
+	elif [ -n "$(echo $f | grep 'ELF .* LSB shared object')" ]; then
+		i=$(echo $f | awk '{print $1}')
+		if [ -n "$(echo $f | grep 'not stripped')" ]; then
+			strip --strip-all "${i: : -1}"
+		fi
 	fi
 done
