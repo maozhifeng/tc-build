@@ -32,7 +32,11 @@ for f in $(find install -type f -exec file {} \;); do
 	if [ -n "$(echo $f | grep 'ELF .* LSB executable')" ]; then
 		i=$(echo $f | awk '{print $1}')
 		# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
-		patchelf --set-rpath '$ORIGIN/../lib' "${i: : -1}"
+		if [ -d $(dirname $i)/../lib/ldscripts ]; then
+			patchelf --set-rpath '$ORIGIN/../../lib:$ORIGIN/../lib' "${i: : -1}"
+		else
+			patchelf --set-rpath '$ORIGIN/../lib' "${i: : -1}"
+		fi
 		# Strip remaining products
 		if [ -n "$(echo $f | grep 'not stripped' | grep -v 'bin/strip')" ]; then
 			strip --strip-unneeded "${i: : -1}"
