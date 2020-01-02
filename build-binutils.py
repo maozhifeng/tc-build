@@ -152,7 +152,7 @@ def invoke_configure(build_folder, install_folder, root_folder, target,
         '--with-system-zlib', '--enable-deterministic-archives',
         '--disable-compressed-debug-sections', '--enable-new-dtags',
         '--disable-werror', '--enable-ld=default', '--enable-gold',
-        '--quiet', '--with-sysroot=/'
+        '--quiet'
     ]
     if host_arch:
         configure += [
