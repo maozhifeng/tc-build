@@ -155,11 +155,11 @@ def invoke_configure(build_folder, install_folder, root_folder, target,
     configure = [
         root_folder.joinpath("binutils", "configure").as_posix(),
         '--prefix=%s' % install_folder.as_posix(),
-        '--enable-shared', '--enable-plugins', '--enable-threads',
+        '--enable-plugins', '--enable-threads', '--disable-gdb',
         '--with-system-zlib', '--enable-deterministic-archives',
-        '--disable-compressed-debug-sections', '--enable-new-dtags',
-        '--disable-werror', '--enable-ld=default', '--enable-gold',
-        '--quiet'
+        '--disable-compressed-debug-sections', '--disable-werror', 
+        '--enable-ld=default', '--enable-gold', '--enable-new-dtags',
+        '--quiet', '--with-pic'
     ]
     if host_arch:
         configure += [
@@ -177,13 +177,14 @@ def invoke_configure(build_folder, install_folder, root_folder, target,
             ''
         ],
         "mipsel-linux-gnu": [
-            '--enable-targets=mips64el-linux-gnuabi64,mips64el-linux-gnuabin32'
+            '--enable-targets=mips64el-linux-gnuabi64,mips64el-linux-gnuabin32',
+            '--enable-shared'
         ],
         "powerpc-linux-gnu": [
-            '--enable-targets=powerpc64-linux-gnu'
+            '--enable-targets=powerpc64-linux-gnu', '--enable-shared'
         ],
         "x86_64-linux-gnu": [
-            '--enable-targets=x86_64-linux-gnux32,x86_64-pep', 
+            '--enable-targets=x86_64-linux-gnux32,x86_64-pep', '--enable-shared'
         ]
     }
     configure_arch_flags['aarch64-linux-gnu'] = configure_arch_flags[
