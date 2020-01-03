@@ -21,8 +21,9 @@ msg "Building LLVM..."
 
 # Build binutils
 msg "Building binutils..."
-export CC="ccache clang"
-export CXX="ccache clang++"
+ccacheBin=$(which ccache)
+test $(which clang) && export CC="${ccacheBin} clang"
+test $(which clang++) && export CXX="${ccacheBin} clang++"
 ./build-binutils.py \
 	--targets arm aarch64 x86_64 \
 	--install-folder "installTmp"
@@ -31,7 +32,7 @@ msg "Setting library load paths for portability and"
 msg "Stripping remaining products..."
 IFS=$'\n'
 for f in $(find installTmp -type f -exec file {} \;); do
-	if [ -n "$(echo $f | grep 'ELF .* LSB executable')" ]; then
+	if [ -n "$(echo $f | grep 'ELF .* executable')" ]; then
 		i=$(echo $f | awk '{print $1}'); i=${i: : -1}
 		# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
 		if [ -d $(dirname $i)/../lib/ldscripts ]; then
@@ -45,7 +46,7 @@ for f in $(find installTmp -type f -exec file {} \;); do
 		if [ -n "$(echo $f | grep 'not stripped')" ]; then
 			strip --strip-unneeded "$i"
 		fi
-	elif [ -n "$(echo $f | grep 'ELF .* LSB shared object')" ]; then
+	elif [ -n "$(echo $f | grep 'ELF .* shared object')" ]; then
 		if [ -n "$(echo $f | grep 'not stripped')" ]; then
 			i=$(echo $f | awk '{print $1}');
 			strip --strip-all "${i: : -1}"
