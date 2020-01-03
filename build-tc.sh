@@ -30,20 +30,22 @@ msg "Stripping remaining products..."
 IFS=$'\n'
 for f in $(find install -type f -exec file {} \;); do
 	if [ -n "$(echo $f | grep 'ELF .* LSB executable')" ]; then
-		i=$(echo $f | awk '{print $1}')
+		i=$(echo $f | awk '{print $1}'); i=${i: : -1}
 		# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
 		if [ -d $(dirname $i)/../lib/ldscripts ]; then
-			patchelf --set-rpath '$ORIGIN/../../lib:$ORIGIN/../lib' "${i: : -1}"
+			patchelf --set-rpath '$ORIGIN/../../lib:$ORIGIN/../lib' "$i"
 		else
-			patchelf --set-rpath '$ORIGIN/../lib' "${i: : -1}"
+			if [ "$(patchelf --print-rpath $i)" != "\$ORIGIN/../../lib:\$ORIGIN/../lib" ]; then
+				patchelf --set-rpath '$ORIGIN/../lib' "$i"
+			fi
 		fi
 		# Strip remaining products
 		if [ -n "$(echo $f | grep 'not stripped' | grep -v 'bin/strip')" ]; then
-			strip --strip-unneeded "${i: : -1}"
+			strip --strip-unneeded "$i"
 		fi
 	elif [ -n "$(echo $f | grep 'ELF .* LSB shared object')" ]; then
-		i=$(echo $f | awk '{print $1}')
 		if [ -n "$(echo $f | grep 'not stripped')" ]; then
+			i=$(echo $f | awk '{print $1}');
 			strip --strip-all "${i: : -1}"
 		fi
 	fi
