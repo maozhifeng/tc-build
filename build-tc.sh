@@ -16,19 +16,21 @@ msg "Building LLVM..."
 	--targets "ARM;AArch64;X86" \
 	--incremental \
 	--build-stage1-only \
-	--install-stage1-only
+	--install-stage1-only \
+	--install-folder "installTmp"
 
 # Build binutils
 msg "Building binutils..."
 export CC="ccache clang"
 export CXX="ccache clang++"
 ./build-binutils.py \
-	--targets arm aarch64 x86_64
+	--targets arm aarch64 x86_64 \
+	--install-folder "installTmp"
 
 msg "Setting library load paths for portability and"
 msg "Stripping remaining products..."
 IFS=$'\n'
-for f in $(find install -type f -exec file {} \;); do
+for f in $(find installTmp -type f -exec file {} \;); do
 	if [ -n "$(echo $f | grep 'ELF .* LSB executable')" ]; then
 		i=$(echo $f | awk '{print $1}'); i=${i: : -1}
 		# Set executable rpaths so setting LD_LIBRARY_PATH isn't necessary
@@ -40,7 +42,7 @@ for f in $(find install -type f -exec file {} \;); do
 			fi
 		fi
 		# Strip remaining products
-		if [ -n "$(echo $f | grep 'not stripped' | grep -v 'bin/strip')" ]; then
+		if [ -n "$(echo $f | grep 'not stripped')" ]; then
 			strip --strip-unneeded "$i"
 		fi
 	elif [ -n "$(echo $f | grep 'ELF .* LSB shared object')" ]; then
@@ -50,3 +52,6 @@ for f in $(find install -type f -exec file {} \;); do
 		fi
 	fi
 done
+
+rm -rf ./install
+mv installTmp/ install/
