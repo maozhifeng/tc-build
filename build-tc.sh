@@ -12,7 +12,7 @@ function msg() {
 msg "Building LLVM..."
 ./build-llvm.py \
 	--clang-vendor "LiuNian-$(date +%Y%m%d)" \
-	--projects "clang;compiler-rt;lld;polly" \
+	--projects "clang;compiler-rt;libunwind;lld;polly" \
 	--targets "ARM;AArch64;X86" \
 	--incremental \
 	--build-stage1-only \

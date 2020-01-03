@@ -552,6 +552,10 @@ def base_cmake_defines(dirs):
     defines = {
         # Make ld.lld the default linker for clang
         'CLANG_DEFAULT_LINKER': 'lld',
+        # Make compiler-rt the default runtime library for clang
+        'CLANG_DEFAULT_RTLIB': 'compiler-rt',
+        # Make libunwind the default unwind library for clang
+        'CLANG_DEFAULT_UNWINDLIB': 'libunwind',
         # Objective-C Automatic Reference Counting (we don't use Objective-C)
         # https://clang.llvm.org/docs/AutomaticReferenceCounting.html
         'CLANG_ENABLE_ARCMT': 'OFF',
@@ -682,10 +686,6 @@ def project_target_cmake_defines(args, stage):
     if "compiler-rt" in projects:
         # Don't build libfuzzer when compiler-rt is enabled, it invokes cmake again and we don't use it
         defines['COMPILER_RT_BUILD_LIBFUZZER'] = 'OFF'
-        # We only use compiler-rt for the sanitizers, disable some extra stuff we don't need
-        # Chromium OS also does this: https://crrev.com/c/1629950
-        defines['COMPILER_RT_BUILD_BUILTINS'] = 'OFF'
-        defines['COMPILER_RT_BUILD_CRT'] = 'OFF'
         defines['COMPILER_RT_BUILD_XRAY'] = 'OFF'
         # We don't need the sanitizers for the stage 1 bootstrap
         if bootstrap_stage(args, stage):
