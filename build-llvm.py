@@ -550,8 +550,6 @@ def base_cmake_defines(dirs):
     """
     # yapf: disable
     defines = {
-        # Make ld.lld the default linker for clang
-        'CLANG_DEFAULT_LINKER': 'lld',
         # Make compiler-rt the default runtime library for clang
         'CLANG_DEFAULT_RTLIB': 'compiler-rt',
         # Make libunwind the default unwind library for clang

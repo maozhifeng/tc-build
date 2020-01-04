@@ -22,8 +22,8 @@ msg "Building LLVM..."
 # Build binutils
 msg "Building binutils..."
 ccacheBin=$(which ccache)
-test $(which clang) && export CC="${ccacheBin} clang"
-test $(which clang++) && export CXX="${ccacheBin} clang++"
+test $(which gcc) && export CC="${ccacheBin} gcc"
+test $(which g++) && export CXX="${ccacheBin} g++"
 ./build-binutils.py \
 	--targets arm aarch64 x86_64 \
 	--install-folder "installTmp"
