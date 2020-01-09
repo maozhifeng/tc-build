@@ -72,7 +72,7 @@ def parse_parameters(root_folder):
 
                         """),
                         type=str,
-                        default="llvm.org/master")
+                        default="master")
     parser.add_argument("-B",
                         "--build-folder",
                         help=textwrap.dedent("""\
@@ -449,7 +449,7 @@ def fetch_llvm_binutils(args, dirs, shallow=False):
         extra_args = ("--depth", "1") if shallow else ()
         utils.print_header("Downloading LLVM")
         subprocess.run(
-            ["git", "clone", *extra_args, "git://github.com/apple/llvm-project", cwd],
+            ["git", "clone", *extra_args, "git://github.com/llvm/llvm-project", cwd],
             check=True)
         subprocess.run(["git", "checkout", ref], check=True, cwd=cwd)
         
