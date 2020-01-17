@@ -46,6 +46,11 @@ for f in $(find installTmp -type f -exec file {} \;); do
 		if [ -n "$(echo $f | grep 'not stripped')" ]; then
 			strip --strip-unneeded "$i"
 		fi
+	elif [ -n "$(echo $f | grep 'ELF .* relocatable')" ]; then
+		if [ -n "$(echo $f | grep 'not stripped')" ]; then
+			i=$(echo $f | awk '{print $1}');
+			strip --strip-unneeded "${i: : -1}"
+		fi
 	else
 		if [ -n "$(echo $f | grep 'not stripped')" ]; then
 			i=$(echo $f | awk '{print $1}');
