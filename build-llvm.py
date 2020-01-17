@@ -278,8 +278,8 @@ def versioned_binaries(binary_name):
     :return: List of versioned binaries
     """
 
-    # There might be clang-6 to clang-10
-    return ['%s-%s' % (binary_name, i) for i in range(10, 5, -1)] + [binary_name]
+    # There might be clang-6 to clang-11
+    return ['%s-%s' % (binary_name, i) for i in range(11, 5, -1)] + [binary_name]
 
 
 def check_cc_ld_variables(root_folder):
