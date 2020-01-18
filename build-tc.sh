@@ -17,7 +17,8 @@ msg "Building LLVM..."
 	--incremental \
 	--build-stage1-only \
 	--install-stage1-only \
-	--install-folder "installTmp"
+	--install-folder "installTmp" \
+	--additional-build-arguments "CLANG_REPOSITORY_STRING=GitHub.COM/WLoot"
 
 # Build binutils
 msg "Building binutils..."
