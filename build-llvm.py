@@ -565,10 +565,6 @@ def base_cmake_defines(dirs):
     """
     # yapf: disable
     defines = {
-        # Make compiler-rt the default runtime library for clang
-        'CLANG_DEFAULT_RTLIB': 'compiler-rt',
-        # Make libunwind the default unwind library for clang
-        'CLANG_DEFAULT_UNWINDLIB': 'libunwind',
         # Objective-C Automatic Reference Counting (we don't use Objective-C)
         # https://clang.llvm.org/docs/AutomaticReferenceCounting.html
         'CLANG_ENABLE_ARCMT': 'OFF',
@@ -703,6 +699,12 @@ def project_target_cmake_defines(args, stage):
         # We don't need the sanitizers for the stage 1 bootstrap
         if bootstrap_stage(args, stage):
             defines['COMPILER_RT_BUILD_SANITIZERS'] = 'OFF'
+        # Make compiler-rt the default runtime library for clang
+        defines['CLANG_DEFAULT_RTLIB'] = 'compiler-rt'
+
+    if "libunwind" in projects:
+        # Make libunwind the default unwind library for clang
+        defines['CLANG_DEFAULT_UNWINDLIB'] = 'libunwind'
 
     return defines
 
