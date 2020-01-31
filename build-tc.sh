@@ -14,6 +14,7 @@ msg "Building LLVM..."
 	--clang-vendor "LiuNian-$(date +%Y%m%d)" \
 	--projects "clang;compiler-rt;libunwind;lld;polly" \
 	--targets "ARM;AArch64;X86" \
+	--update \
 	--incremental \
 	--build-stage1-only \
 	--install-stage1-only \
