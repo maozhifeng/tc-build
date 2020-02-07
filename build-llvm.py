@@ -701,10 +701,16 @@ def project_target_cmake_defines(args, stage):
             defines['COMPILER_RT_BUILD_SANITIZERS'] = 'OFF'
         # Make compiler-rt the default runtime library for clang
         defines['CLANG_DEFAULT_RTLIB'] = 'compiler-rt'
+        if not "libcxx" in projects:
+            defines['COMPILER_RT_USE_LIBCXX'] = 'OFF'
 
     if "libunwind" in projects:
         # Make libunwind the default unwind library for clang
         defines['CLANG_DEFAULT_UNWINDLIB'] = 'libunwind'
+
+    if "lld" in projects:
+        # Make ld.lld the default linker for clang
+        defines['CLANG_DEFAULT_LINKER'] = 'lld'
 
     return defines
 

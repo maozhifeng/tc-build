@@ -12,10 +12,11 @@ function msg() {
 msg "Building LLVM..."
 ./build-llvm.py \
 	--clang-vendor "LiuNian-$(date +%Y%m%d)" \
-	--projects "clang;compiler-rt;libunwind;lld;polly" \
+	--projects "clang;lld;polly" \
 	--targets "ARM;AArch64;X86" \
 	--update \
 	--incremental \
+	--use-good-revision \
 	--build-stage1-only \
 	--install-stage1-only \
 	--install-folder "installTmp" \
@@ -24,8 +25,8 @@ msg "Building LLVM..."
 # Build binutils
 msg "Building binutils..."
 ccacheBin=$(which ccache)
-test $(which gcc) && export CC="${ccacheBin} gcc"
-test $(which g++) && export CXX="${ccacheBin} g++"
+test $(which clang) && export CC="${ccacheBin} clang"
+test $(which clang++) && export CXX="${ccacheBin} clang++"
 ./build-binutils.py \
 	--targets arm aarch64 x86_64 \
 	--install-folder "installTmp"
